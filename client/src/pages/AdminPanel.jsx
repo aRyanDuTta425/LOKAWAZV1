@@ -25,6 +25,7 @@ import {
   Activity
 } from 'lucide-react';
 import issueService from '../services/issueService';
+import api from '../utils/api';
 
 const AdminPanel = () => {
   const { user, logout } = useAuth();
@@ -50,8 +51,8 @@ const AdminPanel = () => {
     try {
       setLoading(true);
       const [statsData, issuesData, usersData] = await Promise.all([
-        issueService.getStats(),
-        issueService.getAllIssues(),
+        fetchStats(),
+        fetchIssues(),
         user.role === 'ADMIN' ? fetchUsers() : Promise.resolve([])
       ]);
       setStats(statsData);
@@ -64,15 +65,38 @@ const AdminPanel = () => {
     }
   };
 
+  const fetchStats = async () => {
+    try {
+      const response = await api.get('/admin/stats');
+      if (response.success) {
+        return {
+          totalIssues: response.data.summary.totalIssues || 0,
+          pendingIssues: response.data.summary.pendingIssues || 0,
+          resolvedIssues: response.data.summary.resolvedIssues || 0,
+          totalUsers: response.data.summary.totalUsers || 0
+        };
+      }
+      return {};
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+      return {};
+    }
+  };
+
+  const fetchIssues = async () => {
+    try {
+      const response = await api.get('/admin/issues?limit=50');
+      return response.success ? response.data : [];
+    } catch (error) {
+      console.error('Error fetching issues:', error);
+      return [];
+    }
+  };
+
   const fetchUsers = async () => {
     try {
-      // This would be a new endpoint in your backend
-      const response = await fetch('/api/admin/users', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      return await response.json();
+      const response = await api.get('/admin/users?limit=50');
+      return response.success ? response.data : [];
     } catch (error) {
       console.error('Error fetching users:', error);
       return [];
@@ -81,10 +105,14 @@ const AdminPanel = () => {
 
   const handleStatusUpdate = async (issueId, newStatus) => {
     try {
-      await issueService.updateIssueStatus(issueId, newStatus);
-      setIssues(prev => prev.map(issue => 
-        issue.id === issueId ? { ...issue, status: newStatus } : issue
-      ));
+      const response = await api.patch(`/admin/issues/${issueId}/status`, { status: newStatus });
+      if (response.success) {
+        setIssues(prev => prev.map(issue => 
+          issue.id === issueId ? { ...issue, status: newStatus } : issue
+        ));
+      } else {
+        alert('Failed to update status: ' + response.message);
+      }
     } catch (error) {
       alert('Failed to update status');
     }
@@ -94,8 +122,12 @@ const AdminPanel = () => {
     if (!window.confirm('Are you sure you want to delete this issue?')) return;
     
     try {
-      await issueService.deleteIssue(issueId);
-      setIssues(prev => prev.filter(issue => issue.id !== issueId));
+      const response = await api.delete(`/admin/issues/${issueId}`);
+      if (response.success) {
+        setIssues(prev => prev.filter(issue => issue.id !== issueId));
+      } else {
+        alert('Failed to delete issue: ' + response.message);
+      }
     } catch (error) {
       alert('Failed to delete issue');
     }
@@ -103,19 +135,13 @@ const AdminPanel = () => {
 
   const handleUserRoleUpdate = async (userId, newRole) => {
     try {
-      const response = await fetch(`/api/admin/users/${userId}/role`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ role: newRole })
-      });
-      
-      if (response.ok) {
+      const response = await api.put(`/admin/users/${userId}/role`, { role: newRole });
+      if (response.success) {
         setUsers(prev => prev.map(user => 
           user.id === userId ? { ...user, role: newRole } : user
         ));
+      } else {
+        alert('Failed to update user role: ' + response.message);
       }
     } catch (error) {
       alert('Failed to update user role');
@@ -419,31 +445,31 @@ const AdminPanel = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {users.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
+              {users.map((userRow) => (
+                <tr key={userRow.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                         <span className="text-sm font-medium text-gray-700">
-                          {user.name?.charAt(0) || user.email?.charAt(0)}
+                          {userRow.name?.charAt(0) || userRow.email?.charAt(0)}
                         </span>
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
-                          {user.name}
+                          {userRow.name}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {user.email}
+                          {userRow.email}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <select
-                      value={user.role}
-                      onChange={(e) => handleUserRoleUpdate(user.id, e.target.value)}
+                      value={userRow.role}
+                      onChange={(e) => handleUserRoleUpdate(userRow.id, e.target.value)}
                       className="text-sm border border-gray-300 rounded px-2 py-1"
-                      disabled={user.id === user.id} // Can't change own role
+                      disabled={userRow.id === user.id} // Can't change own role
                     >
                       <option value="USER">User</option>
                       <option value="MODERATOR">Moderator</option>
@@ -451,10 +477,10 @@ const AdminPanel = () => {
                     </select>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {user.issuesCount || 0}
+                    {issues.filter(issue => issue.userId === userRow.id).length}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(user.createdAt).toLocaleDateString()}
+                    {new Date(userRow.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button className="text-blue-600 hover:text-blue-900">
