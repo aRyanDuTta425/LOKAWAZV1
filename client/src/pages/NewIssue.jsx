@@ -161,49 +161,38 @@ const NewIssue = () => {
     setLoading(true);
     
     try {
-      // Upload images first
-      const uploadedImages = [];
+      // Create FormData to send file with issue data
+      const submitData = new FormData();
       
-      for (let i = 0; i < selectedImages.length; i++) {
-        const file = selectedImages[i];
-        
-        setUploadProgress(prev => ({
-          ...prev,
-          [i]: 0
-        }));
-
-        const uploadedImage = await uploadService.uploadImage(file, {
-          onProgress: (progress) => {
-            setUploadProgress(prev => ({
-              ...prev,
-              [i]: progress
-            }));
-          }
-        });
-
-        uploadedImages.push(uploadedImage);
+      // Add all form fields
+      submitData.append('title', formData.title);
+      submitData.append('description', formData.description);
+      submitData.append('category', formData.category);
+      submitData.append('priority', formData.priority);
+      submitData.append('latitude', formData.latitude);
+      submitData.append('longitude', formData.longitude);
+      
+      // Add image if selected
+      if (selectedImages.length > 0) {
+        submitData.append('image', selectedImages[0]); // Backend expects single image
       }
 
-      // Create issue with uploaded images
-      const issueData = {
-        ...formData,
-        images: uploadedImages
-      };
-
-      const newIssue = await issueService.createIssue(issueData);
+      // Create issue using the form data
+      const response = await issueService.createIssue(submitData);
       
       // Show success message
       alert('Issue reported successfully!');
       
       // Navigate to issue details or dashboard
-      navigate(`/issue/${newIssue.id}`);
+      if (response.data && response.data.id) {
+        navigate(`/issue/${response.data.id}`);
+      } else {
+        navigate('/dashboard');
+      }
       
     } catch (error) {
       console.error('Error creating issue:', error);
-      setErrors(prev => ({
-        ...prev,
-        submit: error.message || 'Failed to create issue. Please try again.'
-      }));
+      alert(error.message || 'Failed to create issue. Please try again.');
     } finally {
       setLoading(false);
     }

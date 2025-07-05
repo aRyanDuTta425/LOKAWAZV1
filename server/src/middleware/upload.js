@@ -1,7 +1,7 @@
 // File upload middleware
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const cloudinary = require('../config/cloudinary');
+const { cloudinary } = require('../config/cloudinary');
 const { errorResponse } = require('../utils/response');
 
 // Configure Cloudinary storage
