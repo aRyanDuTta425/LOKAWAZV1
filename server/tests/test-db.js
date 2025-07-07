@@ -32,7 +32,7 @@
 
 require('dotenv').config(); // Load .env variables
 
-const { generateToken, verifyToken, extractToken } = require('./src/utils/jwt');
+const { generateToken, verifyToken, extractToken } = require('../src/utils/jwt');
 
 const payload = {
   id: 'user123',

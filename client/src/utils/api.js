@@ -38,9 +38,10 @@ api.interceptors.response.use(
   (error) => {
     // Handle different error types
     if (error.response?.status === 401) {
-      // Don't redirect if this is a login or register request
+      // Don't redirect if this is a login, register, or token verification request
       const isAuthRequest = error.config?.url?.includes('/auth/login') || 
-                           error.config?.url?.includes('/auth/register');
+                           error.config?.url?.includes('/auth/register') ||
+                           error.config?.url?.includes('/auth/verify');
       
       if (!isAuthRequest) {
         // Unauthorized on protected routes - clear token and redirect to login

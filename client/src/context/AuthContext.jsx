@@ -26,24 +26,56 @@ export const AuthProvider = ({ children }) => {
       const token = authService.getToken();
       const storedUser = authService.getUser();
       
+      console.log('Initializing auth...', { hasToken: !!token, hasStoredUser: !!storedUser });
+      
       if (token && storedUser) {
-        // Verify token with backend
+        // Set stored user immediately for better UX
+        setUser(storedUser);
+        setIsAuthenticated(true);
+        
+        // Verify token with backend in background
         try {
           const response = await authService.getCurrentUser();
-          if (response.success) {
-            setUser(response.data.user);
+          console.log('Token verification response:', response);
+          
+          if (response.success && response.data) {
+            const userData = response.data.user || response.data;
+            setUser(userData);
             setIsAuthenticated(true);
+            
+            // Update stored user data if it differs
+            if (JSON.stringify(storedUser) !== JSON.stringify(userData)) {
+              authService.updateUser(userData);
+            }
+          } else {
+            console.log('Token verification failed:', response);
+            // Token is invalid, clear storage without redirect
+            authService.logout(false);
+            setUser(null);
+            setIsAuthenticated(false);
+          }
+        } catch (error) {
+          console.log('Token verification error:', error);
+          // If it's a network error, keep the user logged in
+          if (error.status >= 500 || !error.status) {
+            console.log('Network error during verification, keeping user logged in');
+            // Keep existing state, don't logout on network errors
           } else {
             // Token is invalid, clear storage without redirect
             authService.logout(false);
+            setUser(null);
+            setIsAuthenticated(false);
           }
-        } catch (error) {
-          // Token is invalid, clear storage without redirect
-          authService.logout(false);
         }
+      } else {
+        // No token or user data found
+        setUser(null);
+        setIsAuthenticated(false);
       }
     } catch (error) {
       console.error('Auth initialization error:', error);
+      setUser(null);
+      setIsAuthenticated(false);
     } finally {
       setLoading(false);
     }
@@ -85,7 +117,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateUser = (userData) => {
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+    authService.updateUser(userData);
   };
 
   const value = {

@@ -12,7 +12,7 @@ app.get('/test', (req, res) => {
 // Test routes import
 try {
   console.log('Loading routes...');
-  const apiRoutes = require('./src/routes');
+  const apiRoutes = require('../src/routes');
   console.log('Routes loaded successfully');
   
   app.use('/api', apiRoutes);

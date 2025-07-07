@@ -39,7 +39,7 @@ class AuthService {
   // Get current user
   async getCurrentUser() {
     try {
-      const response = await api.get('/auth/me');
+      const response = await api.get('/auth/verify');
       return response;
     } catch (error) {
       throw error;
@@ -71,6 +71,11 @@ class AuthService {
   // Get stored token
   getToken() {
     return localStorage.getItem('token');
+  }
+
+  // Update stored user data
+  updateUser(userData) {
+    localStorage.setItem('user', JSON.stringify(userData));
   }
 }
 
