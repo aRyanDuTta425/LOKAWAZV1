@@ -1,0 +1,30 @@
+{
+  "name": "lokawaz-fullstack",
+  "version": "1.0.0",
+  "description": "LOKAWAZ - Civic Issue Tracker Full-Stack Application",
+  "private": true,
+  "scripts": {
+    "build": "cd client && npm install && npm run build",
+    "start": "node server/server.js",
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "vercel-build": "cd client && npm install && npm run build"
+  },
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aRyanDuTta425/LOKAWAZV1.git"
+  },
+  "author": "Aryan Dutta",
+  "license": "MIT"
+}
