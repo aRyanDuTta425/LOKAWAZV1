@@ -47,10 +47,13 @@ class AuthService {
   }
 
   // Logout user
-  logout() {
+  logout(redirect = true) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = '/login';
+    
+    if (redirect) {
+      window.location.href = '/login';
+    }
   }
 
   // Check if user is authenticated

@@ -17,7 +17,7 @@ const {
   validateCoordinates,
   handleValidationErrors,
 } = require('../middleware/validation');
-const { uploadSingle, handleUploadErrors, validateUpload } = require('../middleware/upload');
+const { uploadSingle, uploadMultiple, handleUploadErrors, validateUpload } = require('../middleware/upload');
 const { body } = require('express-validator');
 
 /**
@@ -28,7 +28,7 @@ const { body } = require('express-validator');
 router.post(
   '/',
   authenticate,
-  uploadSingle,
+  uploadMultiple,
   handleUploadErrors,
   validateUpload,
   validateIssueCreation,
@@ -106,7 +106,7 @@ router.put(
   '/:id',
   authenticate,
   validateId,
-  uploadSingle,
+  uploadMultiple,
   handleUploadErrors,
   validateUpload,
   validateIssueUpdate,

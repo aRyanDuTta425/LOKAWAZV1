@@ -10,35 +10,75 @@ const Login = () => {
     password: ''
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect if already authenticated
+  // Redirect if already authenticated (but not during login attempt)
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !isSubmitting) {
       navigate('/dashboard');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, isSubmitting]);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    
+    // Clear error when user starts typing
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: ''
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     setLoading(true);
+    setIsSubmitting(true);
+    setErrors({});
 
     try {
-      await login(formData);
+      const response = await login(formData);
       toast.success('Login successful!');
       navigate('/dashboard');
     } catch (error) {
-      toast.error(error.message || 'Login failed');
+      console.error('Login error:', error);
+      
+      // Handle different types of errors
+      let errorMessage = 'Login failed';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      // Handle specific login errors
+      if (errorMessage.toLowerCase().includes('email')) {
+        setErrors({ email: 'Invalid email address' });
+      } else if (errorMessage.toLowerCase().includes('password')) {
+        setErrors({ password: 'Incorrect password' });
+      } else if (errorMessage.toLowerCase().includes('not found') || errorMessage.toLowerCase().includes('user does not exist')) {
+        setErrors({ email: 'No account found with this email address' });
+      } else if (errorMessage.toLowerCase().includes('invalid credentials')) {
+        setErrors({ 
+          email: 'Invalid email or password',
+          password: 'Invalid email or password'
+        });
+      }
+      
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -71,12 +111,15 @@ const Login = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
+                  errors.email ? 'border-red-300' : 'border-gray-300'
+                } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                 placeholder="Email address"
                 value={formData.email}
                 onChange={handleChange}
                 disabled={loading}
               />
+              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
             </div>
             <div>
               <label htmlFor="password" className="sr-only">
@@ -88,12 +131,15 @@ const Login = () => {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
+                  errors.password ? 'border-red-300' : 'border-gray-300'
+                } placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
                 disabled={loading}
               />
+              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
             </div>
           </div>
 

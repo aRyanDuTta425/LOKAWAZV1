@@ -158,4 +158,14 @@ router.get(
   adminController.getSystemStats
 );
 
+/**
+ * @route   GET /api/admin/analytics
+ * @desc    Get detailed analytics data (Admin only)
+ * @access  Private (Admin only)
+ */
+router.get(
+  '/analytics',
+  adminController.getAnalytics
+);
+
 module.exports = router;

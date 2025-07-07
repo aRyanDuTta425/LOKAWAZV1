@@ -358,6 +358,61 @@ const bulkUpdateIssueStatus = async (req, res) => {
   }
 };
 
+/**
+ * Get analytics data (Admin only)
+ * @route GET /api/admin/analytics
+ * @access Private (Admin only)
+ */
+const getAnalytics = async (req, res) => {
+  try {
+    const { timeRange = '6months' } = req.query;
+
+    // Calculate date range based on timeRange parameter
+    const now = new Date();
+    let startDate;
+    
+    switch (timeRange) {
+      case '3months':
+        startDate = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+        break;
+      case '12months':
+        startDate = new Date(now.getFullYear() - 1, now.getMonth(), 1);
+        break;
+      case '6months':
+      default:
+        startDate = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+        break;
+    }
+
+    // Call services to get analytics data
+    const [
+      statusDistribution,
+      categoryDistribution,
+      monthlyTrends,
+      priorityDistribution,
+      userActivityTrends
+    ] = await Promise.all([
+      issueService.getStatusDistribution(startDate),
+      issueService.getCategoryDistribution(startDate),
+      issueService.getMonthlyTrends(startDate),
+      issueService.getPriorityDistribution(startDate),
+      userService.getUserActivityTrends(startDate)
+    ]);
+
+    return successResponse(res, {
+      statusDistribution,
+      categoryDistribution,
+      monthlyTrends,
+      priorityDistribution,
+      userActivityTrends
+    }, 'Analytics data retrieved successfully');
+
+  } catch (error) {
+    console.error('Admin get analytics controller error:', error);
+    return errorResponse(res, error.message, HTTP_STATUS.BAD_REQUEST);
+  }
+};
+
 module.exports = {
   getAllUsers,
   getAllIssues,
@@ -369,4 +424,5 @@ module.exports = {
   getUserDetails,
   getIssueDetails,
   bulkUpdateIssueStatus,
+  getAnalytics,
 };

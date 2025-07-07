@@ -14,11 +14,13 @@ const LeafletMap = ({
   center = [28.6139, 77.2090], // Default to Delhi
   zoom = 13,
   issues = [],
+  markers = [], // Individual markers for specific locations
   onLocationSelect,
   selectedLocation,
   height = '400px',
   showIssueMarkers = true,
   clickable = false,
+  interactive = true,
   className = ''
 }) => {
   const mapRef = useRef(null);
@@ -34,8 +36,13 @@ const LeafletMap = ({
     mapInstanceRef.current = L.map(mapRef.current, {
       center: center,
       zoom: zoom,
-      zoomControl: true,
-      scrollWheelZoom: true,
+      zoomControl: interactive,
+      scrollWheelZoom: interactive,
+      dragging: interactive,
+      touchZoom: interactive,
+      doubleClickZoom: interactive,
+      boxZoom: interactive,
+      keyboard: interactive,
     });
 
     // Add tile layer
@@ -108,6 +115,62 @@ const LeafletMap = ({
     // Center map on selected location
     mapInstanceRef.current.setView([selectedLocation.lat, selectedLocation.lng], Math.max(zoom, 15));
   }, [selectedLocation, zoom]);
+
+  // Handle individual markers (for issue details page)
+  useEffect(() => {
+    if (!mapInstanceRef.current || !markers || markers.length === 0) return;
+
+    // Clear existing individual markers
+    markersRef.current.forEach(marker => {
+      if (marker.options.isIndividual) {
+        mapInstanceRef.current.removeLayer(marker);
+      }
+    });
+    markersRef.current = markersRef.current.filter(marker => !marker.options.isIndividual);
+
+    // Add new individual markers
+    markers.forEach(markerData => {
+      const { position, popup, icon } = markerData;
+      
+      let markerIcon = L.divIcon({
+        html: `
+          <div style="
+            background-color: #ef4444;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          ">
+            <svg width="12" height="12" fill="white" viewBox="0 0 24 24">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+          </div>
+        `,
+        className: 'individual-marker',
+        iconSize: [24, 24],
+        iconAnchor: [12, 24],
+      });
+
+      if (icon) {
+        markerIcon = icon;
+      }
+
+      const marker = L.marker(position, {
+        icon: markerIcon,
+        isIndividual: true,
+      }).addTo(mapInstanceRef.current);
+
+      if (popup) {
+        marker.bindPopup(popup);
+      }
+
+      markersRef.current.push(marker);
+    });
+  }, [markers]);
 
   // Handle issue markers
   useEffect(() => {

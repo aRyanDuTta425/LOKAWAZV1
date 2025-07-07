@@ -22,10 +22,12 @@ import {
   UserPlus,
   UserMinus,
   Crown,
-  Activity
+  Activity,
+  TrendingUp
 } from 'lucide-react';
 import issueService from '../services/issueService';
 import api from '../utils/api';
+import Analytics from '../components/Analytics';
 
 const AdminPanel = () => {
   const { user, logout } = useAuth();
@@ -498,28 +500,28 @@ const AdminPanel = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
-              <p className="text-gray-600">Manage issues, users, and system settings</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Admin Panel</h1>
+              <p className="text-gray-600 dark:text-gray-400">Manage issues, users, and system settings</p>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-500 dark:text-gray-400">
                 Logged in as <span className="font-medium">{user.name}</span>
               </span>
               <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                user.role === 'ADMIN' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+                user.role === 'ADMIN' ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
               }`}>
                 {user.role}
               </span>
@@ -540,6 +542,17 @@ const AdminPanel = () => {
             >
               <BarChart3 className="w-5 h-5 inline mr-2" />
               Dashboard
+            </button>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`pb-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'analytics'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <TrendingUp className="w-5 h-5 inline mr-2" />
+              Analytics
             </button>
             <button
               onClick={() => setActiveTab('issues')}
@@ -570,6 +583,7 @@ const AdminPanel = () => {
 
         {/* Tab Content */}
         {activeTab === 'dashboard' && <DashboardTab />}
+        {activeTab === 'analytics' && <Analytics />}
         {activeTab === 'issues' && <IssuesTab />}
         {activeTab === 'users' && user.role === 'ADMIN' && <UsersTab />}
       </div>

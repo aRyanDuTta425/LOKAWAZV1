@@ -33,7 +33,9 @@ model Issue {
   description String?
   latitude    Float
   longitude   Float
-  imageUrl    String?
+  location    String?
+  imageUrl    String?     // Keep for backward compatibility
+  images      String[]    // New field for multiple images
   status      IssueStatus @default(NEW)
   category    String?
   priority    Priority    @default(MEDIUM)

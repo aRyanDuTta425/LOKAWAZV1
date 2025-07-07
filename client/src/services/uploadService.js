@@ -67,39 +67,7 @@ class UploadService {
       reader.onload = (e) => {
         resolve({
           file,
-          preview: e.target.result,
-          name: file.name,
-          size: file.size,
-          type: file.type,
-        });
-      };
-      
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  // Create multiple image previews
-  async createImagePreviews(files) {
-    try {
-      const previewPromises = Array.from(files).map(file => this.createImagePreview(file));
-      const previews = await Promise.all(previewPromises);
-      return previews;
-    } catch (error) {
-      console.error('Error creating image previews:', error);
-      throw new Error('Failed to create image previews');
-    }
-  }
-
-  // Create image preview
-  createImagePreview(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      
-      reader.onload = (e) => {
-        resolve({
-          file,
-          preview: e.target.result,
+          url: e.target.result,
           name: file.name,
           size: file.size,
           type: file.type,

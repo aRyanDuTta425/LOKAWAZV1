@@ -34,12 +34,12 @@ export const AuthProvider = ({ children }) => {
             setUser(response.data.user);
             setIsAuthenticated(true);
           } else {
-            // Token is invalid, clear storage
-            authService.logout();
+            // Token is invalid, clear storage without redirect
+            authService.logout(false);
           }
         } catch (error) {
-          // Token is invalid, clear storage
-          authService.logout();
+          // Token is invalid, clear storage without redirect
+          authService.logout(false);
         }
       }
     } catch (error) {
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    authService.logout();
+    authService.logout(false); // Don't auto-redirect, let the component handle navigation
     setUser(null);
     setIsAuthenticated(false);
   };

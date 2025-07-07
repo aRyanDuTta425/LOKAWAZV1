@@ -3,8 +3,10 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import Chatbot from './components/Chatbot';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Import pages
@@ -27,83 +29,88 @@ function App() {
         v7_relativeSplatPath: true
       }}
     >
-      <AuthProvider>
-        <div className="min-h-screen bg-gray-50 flex flex-col">
-          {/* Toast notifications */}
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: '#363636',
-                color: '#fff',
-              },
-              success: {
-                duration: 3000,
-                theme: {
-                  primary: 'green',
-                  secondary: 'black',
+      <ThemeProvider>
+        <AuthProvider>
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col transition-colors duration-200">
+            {/* Toast notifications */}
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: '#363636',
+                  color: '#fff',
                 },
-              },
-            }}
-          />
+                success: {
+                  duration: 3000,
+                  theme: {
+                    primary: 'green',
+                    secondary: 'black',
+                  },
+                },
+              }}
+            />
 
-          {/* Navigation */}
-          <Navbar />
+            {/* Navigation */}
+            <Navbar />
 
-          {/* Main Content */}
-          <main className="flex-1">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+            {/* Main Content */}
+            <main className="flex-1">
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
 
-              {/* Protected Routes */}
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/new-issue"
-                element={
-                  <ProtectedRoute>
-                    <NewIssue />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/issue/:id"
-                element={
-                  <ProtectedRoute>
-                    <IssueDetails />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Protected Routes */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/new-issue"
+                  element={
+                    <ProtectedRoute>
+                      <NewIssue />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/issue/:id"
+                  element={
+                    <ProtectedRoute>
+                      <IssueDetails />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Admin Routes */}
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute requiredRole="ADMIN">
-                    <AdminPanel />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Admin Routes */}
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute requiredRole="ADMIN">
+                      <AdminPanel />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* 404 Page */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
+                {/* 404 Page */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
 
-          {/* Footer */}
-          <Footer />
-        </div>
-      </AuthProvider>
+            {/* Footer */}
+            <Footer />
+
+            {/* Chatbot */}
+            <Chatbot />
+          </div>
+        </AuthProvider>
+      </ThemeProvider>
     </Router>
   );
 }

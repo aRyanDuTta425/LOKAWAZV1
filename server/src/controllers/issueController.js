@@ -14,8 +14,11 @@ const createIssue = async (req, res) => {
     const userId = req.userId;
     const issueData = { ...req.body, userId };
 
-    // If there's an uploaded file, add the image URL
-    if (req.file && req.file.path) {
+    // If there are uploaded files, add the image URLs
+    if (req.files && req.files.length > 0) {
+      issueData.images = req.files.map(file => file.path);
+    } else if (req.file && req.file.path) {
+      // Fallback for single image upload
       issueData.imageUrl = req.file.path;
     }
 
@@ -27,8 +30,16 @@ const createIssue = async (req, res) => {
   } catch (error) {
     console.error('Create issue controller error:', error);
     
-    // If there was an uploaded file and creation failed, clean it up
-    if (req.file && req.file.path) {
+    // If there were uploaded files and creation failed, clean them up
+    if (req.files && req.files.length > 0) {
+      try {
+        for (const file of req.files) {
+          await uploadService.deleteIssueImage(file.path);
+        }
+      } catch (cleanupError) {
+        console.error('Failed to cleanup uploaded files:', cleanupError);
+      }
+    } else if (req.file && req.file.path) {
       try {
         await uploadService.deleteIssueImage(req.file.path);
       } catch (cleanupError) {
@@ -139,8 +150,11 @@ const updateIssue = async (req, res) => {
     const requestingUserId = req.userId;
     const userRole = req.userRole;
 
-    // If there's an uploaded file, add the image URL
-    if (req.file && req.file.path) {
+    // If there are uploaded files, add the image URLs
+    if (req.files && req.files.length > 0) {
+      updateData.images = req.files.map(file => file.path);
+    } else if (req.file && req.file.path) {
+      // Fallback for single image upload
       updateData.imageUrl = req.file.path;
     }
 
@@ -152,8 +166,16 @@ const updateIssue = async (req, res) => {
   } catch (error) {
     console.error('Update issue controller error:', error);
     
-    // If there was an uploaded file and update failed, clean it up
-    if (req.file && req.file.path) {
+    // If there were uploaded files and update failed, clean them up
+    if (req.files && req.files.length > 0) {
+      try {
+        for (const file of req.files) {
+          await uploadService.deleteIssueImage(file.path);
+        }
+      } catch (cleanupError) {
+        console.error('Failed to cleanup uploaded files:', cleanupError);
+      }
+    } else if (req.file && req.file.path) {
       try {
         await uploadService.deleteIssueImage(req.file.path);
       } catch (cleanupError) {

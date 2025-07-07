@@ -346,21 +346,22 @@ const IssueDetails = () => {
               </div>
 
               {/* Images */}
-              {issue.images && issue.images.length > 0 && (
+              {((issue.images && issue.images.length > 0) || issue.imageUrl) && (
                 <div className="mt-6">
                   <h3 className="text-lg font-semibold mb-3 flex items-center">
                     <Camera className="w-5 h-5 mr-2" />
-                    Images ({issue.images.length})
+                    Images ({(issue.images?.length || 0) + (issue.imageUrl ? 1 : 0)})
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {issue.images.map((image, index) => (
+                    {/* Display multiple images from images array */}
+                    {issue.images && issue.images.map((image, index) => (
                       <div
-                        key={index}
+                        key={`multi-${index}`}
                         className="relative cursor-pointer group"
                         onClick={() => setSelectedImage(image)}
                       >
                         <img
-                          src={image.url || image}
+                          src={typeof image === 'string' ? image : image.url}
                           alt={`Issue image ${index + 1}`}
                           className="w-full h-32 object-cover rounded-lg group-hover:opacity-90 transition-opacity"
                         />
@@ -369,6 +370,23 @@ const IssueDetails = () => {
                         </div>
                       </div>
                     ))}
+                    
+                    {/* Display single image from imageUrl (legacy support) */}
+                    {issue.imageUrl && !issue.images && (
+                      <div
+                        className="relative cursor-pointer group"
+                        onClick={() => setSelectedImage(issue.imageUrl)}
+                      >
+                        <img
+                          src={issue.imageUrl}
+                          alt="Issue image"
+                          className="w-full h-32 object-cover rounded-lg group-hover:opacity-90 transition-opacity"
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
+                          <Camera className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -382,17 +400,27 @@ const IssueDetails = () => {
                   </h3>
                   <div className="space-y-3">
                     {issue.location && (
-                      <p className="text-gray-700">{issue.location}</p>
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-gray-700 text-sm font-medium">Address:</p>
+                        <p className="text-gray-900">{issue.location}</p>
+                      </div>
                     )}
-                    <div className="h-64 rounded-lg overflow-hidden">
+                    <div className="bg-gray-50 rounded-lg p-3">
+                      <p className="text-gray-700 text-sm font-medium">Coordinates:</p>
+                      <p className="text-gray-900 font-mono text-sm">
+                        {parseFloat(issue.latitude).toFixed(6)}, {parseFloat(issue.longitude).toFixed(6)}
+                      </p>
+                    </div>
+                    <div className="h-64 rounded-lg overflow-hidden border border-gray-200">
                       <LeafletMap
-                        center={[issue.latitude, issue.longitude]}
+                        center={[parseFloat(issue.latitude), parseFloat(issue.longitude)]}
                         zoom={16}
                         markers={[{
-                          position: [issue.latitude, issue.longitude],
+                          position: [parseFloat(issue.latitude), parseFloat(issue.longitude)],
                           popup: issue.title
                         }]}
                         interactive={true}
+                        showIssueMarkers={false}
                       />
                     </div>
                   </div>
@@ -584,7 +612,7 @@ const IssueDetails = () => {
                 <X className="w-8 h-8" />
               </button>
               <img
-                src={selectedImage.url || selectedImage}
+                src={typeof selectedImage === 'string' ? selectedImage : selectedImage.url || selectedImage}
                 alt="Issue image"
                 className="max-w-full max-h-full object-contain rounded-lg"
               />

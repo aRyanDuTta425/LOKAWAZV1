@@ -55,8 +55,28 @@ const Register = () => {
 
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    } else {
+      // Enhanced password validation
+      const passwordErrors = [];
+      if (formData.password.length < 8) {
+        passwordErrors.push('at least 8 characters');
+      }
+      if (!/(?=.*[a-z])/.test(formData.password)) {
+        passwordErrors.push('one lowercase letter');
+      }
+      if (!/(?=.*[A-Z])/.test(formData.password)) {
+        passwordErrors.push('one uppercase letter');
+      }
+      if (!/(?=.*\d)/.test(formData.password)) {
+        passwordErrors.push('one number');
+      }
+      if (!/(?=.*[@$!%*?&])/.test(formData.password)) {
+        passwordErrors.push('one special character (@$!%*?&)');
+      }
+      
+      if (passwordErrors.length > 0) {
+        newErrors.password = `Password must contain ${passwordErrors.join(', ')}`;
+      }
     }
 
     if (!formData.confirmPassword) {
@@ -84,7 +104,31 @@ const Register = () => {
       toast.success('Registration successful! Welcome to LOKAWAZ!');
       navigate('/dashboard');
     } catch (error) {
-      toast.error(error.message || 'Registration failed');
+      console.error('Registration error:', error);
+      
+      // Handle different types of errors
+      let errorMessage = 'Registration failed';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      // Set specific field errors if available
+      if (error.response?.data?.errors) {
+        const fieldErrors = {};
+        error.response.data.errors.forEach(err => {
+          if (err.field) {
+            fieldErrors[err.field] = err.message;
+          }
+        });
+        if (Object.keys(fieldErrors).length > 0) {
+          setErrors(fieldErrors);
+        }
+      }
+      
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

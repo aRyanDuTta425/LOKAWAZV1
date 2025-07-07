@@ -58,7 +58,7 @@ const uploadSingle = upload.single('image');
 /**
  * Multiple images upload middleware
  */
-const uploadMultiple = upload.array('images', 3);
+const uploadMultiple = upload.array('images', 5);
 
 /**
  * Handle multer errors
@@ -68,7 +68,7 @@ const handleUploadErrors = (error, req, res, next) => {
     if (error.code === 'LIMIT_FILE_SIZE') {
       return errorResponse(res, 'File too large. Maximum 5MB allowed', 400);
     } else if (error.code === 'LIMIT_FILE_COUNT') {
-      return errorResponse(res, 'Too many files. Maximum 3 files allowed', 400);
+      return errorResponse(res, 'Too many files. Maximum 5 files allowed', 400);
     } else if (error.code === 'LIMIT_UNEXPECTED_FILE') {
       return errorResponse(res, 'Unexpected file field', 400);
     }

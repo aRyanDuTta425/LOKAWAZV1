@@ -428,6 +428,79 @@ const getUsersByRole = async (role, pagination = {}) => {
   }
 };
 
+/**
+ * Get user activity trends for analytics
+ * @param {Date} startDate - Start date for filtering
+ * @returns {Promise<Array>} User activity trends data
+ */
+const getUserActivityTrends = async (startDate) => {
+  try {
+    const now = new Date();
+    const months = [];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    // Generate month array
+    for (let i = 0; i < 6; i++) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.unshift({
+        month: monthNames[date.getMonth()],
+        year: date.getFullYear(),
+        start: new Date(date.getFullYear(), date.getMonth(), 1),
+        end: new Date(date.getFullYear(), date.getMonth() + 1, 0)
+      });
+    }
+
+    const trendsData = await Promise.all(
+      months.map(async (monthData) => {
+        const [newUsers, activeUsers] = await Promise.all([
+          prisma.user.count({
+            where: {
+              createdAt: {
+                gte: monthData.start,
+                lte: monthData.end
+              }
+            }
+          }),
+          prisma.user.count({
+            where: {
+              OR: [
+                {
+                  issues: {
+                    some: {
+                      createdAt: {
+                        gte: monthData.start,
+                        lte: monthData.end
+                      }
+                    }
+                  }
+                },
+                {
+                  createdAt: {
+                    gte: monthData.start,
+                    lte: monthData.end
+                  }
+                }
+              ]
+            }
+          })
+        ]);
+
+        return {
+          month: monthData.month,
+          newUsers,
+          activeUsers
+        };
+      })
+    );
+
+    return trendsData;
+
+  } catch (error) {
+    console.error('Get user activity trends error:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getUserById,
   updateUser,
@@ -436,4 +509,5 @@ module.exports = {
   getUserStats,
   updateUserRole,
   getUsersByRole,
+  getUserActivityTrends,
 };

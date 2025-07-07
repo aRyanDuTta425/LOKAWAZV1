@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Camera, MapPin, X, Upload, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import LeafletMap from '../components/LeafletMap';
+import AddressSearch from '../components/AddressSearch';
 import uploadService from '../services/uploadService';
 import issueService from '../services/issueService';
 
@@ -55,6 +56,25 @@ const NewIssue = () => {
       setErrors(prev => ({
         ...prev,
         [name]: null
+      }));
+    }
+  };
+
+  // Handle location selection from address search
+  const handleAddressSelect = (locationData) => {
+    setSelectedLocation({ lat: locationData.lat, lng: locationData.lng });
+    setFormData(prev => ({
+      ...prev,
+      latitude: locationData.lat,
+      longitude: locationData.lng,
+      location: locationData.address
+    }));
+    
+    // Clear location error
+    if (errors.location) {
+      setErrors(prev => ({
+        ...prev,
+        location: null
       }));
     }
   };
@@ -161,7 +181,7 @@ const NewIssue = () => {
     setLoading(true);
     
     try {
-      // Create FormData to send file with issue data
+      // Create FormData to send files with issue data
       const submitData = new FormData();
       
       // Add all form fields
@@ -172,10 +192,15 @@ const NewIssue = () => {
       submitData.append('latitude', formData.latitude);
       submitData.append('longitude', formData.longitude);
       
-      // Add image if selected
-      if (selectedImages.length > 0) {
-        submitData.append('image', selectedImages[0]); // Backend expects single image
+      // Add location/address if provided
+      if (formData.location) {
+        submitData.append('location', formData.location);
       }
+      
+      // Add multiple images if selected
+      selectedImages.forEach((image, index) => {
+        submitData.append('images', image); // Backend expects 'images' field for multiple files
+      });
 
       // Create issue using the form data
       const response = await issueService.createIssue(submitData);
@@ -309,24 +334,70 @@ const NewIssue = () => {
                 Location *
               </label>
               <div className="space-y-4">
-                <input
-                  type="text"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Address will be auto-filled when you select a location on the map"
-                  readOnly
-                />
+                {/* Address Search */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                    Search Address
+                  </label>
+                  <AddressSearch
+                    value={formData.location}
+                    onChange={(value) => setFormData(prev => ({ ...prev, location: value }))}
+                    onLocationSelect={handleAddressSelect}
+                    placeholder="Type to search for an address..."
+                    className="w-full"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Start typing an address to see suggestions, or click on the map below
+                  </p>
+                </div>
                 
-                <div className="h-96 rounded-lg overflow-hidden border border-gray-300">
-                  <LeafletMap
-                    onLocationSelect={handleLocationSelect}
-                    selectedLocation={selectedLocation}
-                    clickable={true}
-                    className="w-full h-full"
+                {/* Manual Address Input */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                    Or enter address manually
+                  </label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter the address manually"
                   />
                 </div>
+                
+                {/* Map for location selection */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                    Select on Map
+                  </label>
+                  <div className="h-96 rounded-lg overflow-hidden border border-gray-300">
+                    <LeafletMap
+                      onLocationSelect={handleLocationSelect}
+                      selectedLocation={selectedLocation}
+                      clickable={true}
+                      className="w-full h-full"
+                    />
+                  </div>
+                </div>
+                
+                {/* Location Summary */}
+                {selectedLocation && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                    <div className="flex items-start space-x-2">
+                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-green-800">Location Selected</p>
+                        {formData.location && (
+                          <p className="text-sm text-green-700 mt-1">{formData.location}</p>
+                        )}
+                        <p className="text-xs text-green-600 mt-1 font-mono">
+                          {selectedLocation.lat.toFixed(6)}, {selectedLocation.lng.toFixed(6)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 
                 {errors.location && (
                   <p className="text-sm text-red-600 flex items-center">
@@ -380,6 +451,12 @@ const NewIssue = () => {
                         >
                           <X className="w-4 h-4" />
                         </button>
+                        
+                        {/* File Info */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-2 rounded-b-lg">
+                          <div className="truncate">{preview.name}</div>
+                          <div>{(preview.size / 1024 / 1024).toFixed(1)} MB</div>
+                        </div>
                         
                         {/* Upload Progress */}
                         {uploadProgress[index] !== undefined && uploadProgress[index] < 100 && (

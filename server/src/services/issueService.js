@@ -9,9 +9,11 @@ const { ERROR_MESSAGES, SUCCESS_MESSAGES, PAGINATION, ISSUE_STATUS, PRIORITY_LEV
  * @param {String} issueData.description - Issue description
  * @param {Number} issueData.latitude - Latitude coordinate
  * @param {Number} issueData.longitude - Longitude coordinate
+ * @param {String} issueData.location - Location address
  * @param {String} issueData.category - Issue category
  * @param {String} issueData.priority - Issue priority
- * @param {String} issueData.imageUrl - Image URL
+ * @param {String} issueData.imageUrl - Single image URL (legacy)
+ * @param {Array} issueData.images - Multiple image URLs
  * @param {String} issueData.userId - User ID who created the issue
  * @returns {Promise<Object>} Created issue data
  */
@@ -22,9 +24,11 @@ const createIssue = async (issueData) => {
       description,
       latitude,
       longitude,
+      location,
       category,
       priority = PRIORITY_LEVELS.MEDIUM,
       imageUrl,
+      images,
       userId
     } = issueData;
 
@@ -45,9 +49,11 @@ const createIssue = async (issueData) => {
         description: description?.trim(),
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
+        location: location?.trim(),
         category: category?.trim(),
         priority,
-        imageUrl,
+        imageUrl, // Keep for backward compatibility
+        images: images || [], // Store multiple images
         userId,
         status: ISSUE_STATUS.NEW,
       },
@@ -566,6 +572,170 @@ const getNearbyIssues = async (latitude, longitude, radius = 5, pagination = {})
   }
 };
 
+/**
+ * Get status distribution for analytics
+ * @param {Date} startDate - Start date for filtering
+ * @returns {Promise<Array>} Status distribution data
+ */
+const getStatusDistribution = async (startDate) => {
+  try {
+    const statusStats = await prisma.issue.groupBy({
+      by: ['status'],
+      where: {
+        createdAt: {
+          gte: startDate,
+        }
+      },
+      _count: {
+        status: true,
+      }
+    });
+
+    return statusStats.map(stat => ({
+      name: stat.status.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase()),
+      value: stat._count.status,
+      count: stat._count.status
+    }));
+
+  } catch (error) {
+    console.error('Get status distribution error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get category distribution for analytics
+ * @param {Date} startDate - Start date for filtering
+ * @returns {Promise<Array>} Category distribution data
+ */
+const getCategoryDistribution = async (startDate) => {
+  try {
+    const categoryStats = await prisma.issue.groupBy({
+      by: ['category'],
+      where: {
+        createdAt: {
+          gte: startDate,
+        }
+      },
+      _count: {
+        category: true,
+      }
+    });
+
+    return categoryStats.map(stat => ({
+      name: stat.category,
+      value: stat._count.category,
+      count: stat._count.category
+    }));
+
+  } catch (error) {
+    console.error('Get category distribution error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get monthly trends for analytics
+ * @param {Date} startDate - Start date for filtering
+ * @returns {Promise<Array>} Monthly trends data
+ */
+const getMonthlyTrends = async (startDate) => {
+  try {
+    const now = new Date();
+    const months = [];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    // Generate month array
+    for (let i = 0; i < 6; i++) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.unshift({
+        month: monthNames[date.getMonth()],
+        year: date.getFullYear(),
+        start: new Date(date.getFullYear(), date.getMonth(), 1),
+        end: new Date(date.getFullYear(), date.getMonth() + 1, 0)
+      });
+    }
+
+    const trendsData = await Promise.all(
+      months.map(async (monthData) => {
+        const [reported, resolved, pending] = await Promise.all([
+          prisma.issue.count({
+            where: {
+              createdAt: {
+                gte: monthData.start,
+                lte: monthData.end
+              }
+            }
+          }),
+          prisma.issue.count({
+            where: {
+              status: 'RESOLVED',
+              updatedAt: {
+                gte: monthData.start,
+                lte: monthData.end
+              }
+            }
+          }),
+          prisma.issue.count({
+            where: {
+              status: {
+                in: ['REPORTED', 'UNDER_REVIEW', 'IN_PROGRESS']
+              },
+              createdAt: {
+                lte: monthData.end
+              }
+            }
+          })
+        ]);
+
+        return {
+          month: monthData.month,
+          reported,
+          resolved,
+          pending
+        };
+      })
+    );
+
+    return trendsData;
+
+  } catch (error) {
+    console.error('Get monthly trends error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get priority distribution for analytics
+ * @param {Date} startDate - Start date for filtering
+ * @returns {Promise<Array>} Priority distribution data
+ */
+const getPriorityDistribution = async (startDate) => {
+  try {
+    const priorityStats = await prisma.issue.groupBy({
+      by: ['priority'],
+      where: {
+        createdAt: {
+          gte: startDate,
+        }
+      },
+      _count: {
+        priority: true,
+      }
+    });
+
+    return priorityStats.map(stat => ({
+      name: stat.priority.charAt(0) + stat.priority.slice(1).toLowerCase(),
+      value: stat._count.priority,
+      count: stat._count.priority
+    }));
+
+  } catch (error) {
+    console.error('Get priority distribution error:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   createIssue,
   getIssueById,
@@ -575,4 +745,8 @@ module.exports = {
   updateIssueStatus,
   getIssueStats,
   getNearbyIssues,
+  getStatusDistribution,
+  getCategoryDistribution,
+  getMonthlyTrends,
+  getPriorityDistribution,
 };

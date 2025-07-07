@@ -7,6 +7,7 @@ const authRoutes = require('./auth');
 const userRoutes = require('./users');
 const issueRoutes = require('./issues');
 const adminRoutes = require('./admin');
+const chatbotRoutes = require('./chatbot');
 
 /**
  * API Health Check
@@ -42,6 +43,7 @@ router.get('/', (req, res) => {
       users: '/api/users',
       issues: '/api/issues',
       admin: '/api/admin',
+      chatbot: '/api/chatbot',
     },
     timestamp: new Date().toISOString(),
   });
@@ -52,6 +54,7 @@ router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/issues', issueRoutes);
 router.use('/admin', adminRoutes);
+router.use('/chatbot', chatbotRoutes);
 
 // Handle 404 for unknown API routes
 router.use('*', (req, res) => {

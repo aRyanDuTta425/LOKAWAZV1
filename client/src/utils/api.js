@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: 'http://localhost:8000/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -38,10 +38,16 @@ api.interceptors.response.use(
   (error) => {
     // Handle different error types
     if (error.response?.status === 401) {
-      // Unauthorized - clear token and redirect to login
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      // Don't redirect if this is a login or register request
+      const isAuthRequest = error.config?.url?.includes('/auth/login') || 
+                           error.config?.url?.includes('/auth/register');
+      
+      if (!isAuthRequest) {
+        // Unauthorized on protected routes - clear token and redirect to login
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      }
     }
     
     // Return formatted error
@@ -49,7 +55,8 @@ api.interceptors.response.use(
     return Promise.reject({
       message: errorMessage,
       status: error.response?.status,
-      data: error.response?.data
+      data: error.response?.data,
+      response: error.response
     });
   }
 );

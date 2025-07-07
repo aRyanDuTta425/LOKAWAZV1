@@ -98,27 +98,27 @@ const Home = () => {
   const getStatusBadge = (status) => {
     const statusConfig = {
       'REPORTED': { 
-        color: 'bg-yellow-100 text-yellow-800 border-yellow-200', 
+        color: 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800', 
         icon: AlertTriangle,
         label: 'Reported' 
       },
       'UNDER_REVIEW': { 
-        color: 'bg-blue-100 text-blue-800 border-blue-200', 
+        color: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800', 
         icon: Eye,
         label: 'Under Review' 
       },
       'IN_PROGRESS': { 
-        color: 'bg-purple-100 text-purple-800 border-purple-200', 
+        color: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/20 dark:text-purple-400 dark:border-purple-800', 
         icon: Clock,
         label: 'In Progress' 
       },
       'RESOLVED': { 
-        color: 'bg-green-100 text-green-800 border-green-200', 
+        color: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800', 
         icon: CheckCircle,
         label: 'Resolved' 
       },
       'CLOSED': { 
-        color: 'bg-gray-100 text-gray-800 border-gray-200', 
+        color: 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600', 
         icon: CheckCircle,
         label: 'Closed' 
       }
@@ -136,19 +136,19 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-indigo-600/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-indigo-600/10 dark:from-blue-400/5 dark:to-indigo-400/5"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <div className="space-y-4">
-                <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight">
                   Your Voice for
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600"> Community Change</span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400"> Community Change</span>
                 </h1>
-                <p className="text-xl text-gray-600 leading-relaxed">
+                <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
                   Report civic issues, track progress, and build a better community together. 
                   LokAwaaz empowers citizens to make their voices heard and drive real change.
                 </p>
@@ -177,14 +177,14 @@ const Home = () => {
                 
                 <Link 
                   to="/dashboard"
-                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-gray-700 bg-white border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-md hover:shadow-lg"
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   <MapPin className="w-5 h-5 mr-2" />
                   Explore Issues
                 </Link>
               </div>
 
-              <div className="flex items-center space-x-8 text-sm text-gray-500">
+              <div className="flex items-center space-x-8 text-sm text-gray-500 dark:text-gray-400">
                 <div className="flex items-center">
                   <Shield className="w-4 h-4 mr-2 text-green-500" />
                   Secure & Private
@@ -202,25 +202,25 @@ const Home = () => {
 
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-3xl blur-3xl opacity-20"></div>
-              <div className="relative bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+              <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 border border-gray-100 dark:border-gray-700">
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900">Quick Report</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Quick Report</h3>
                     <Star className="w-5 h-5 text-yellow-400" />
                   </div>
                   
                   <div className="space-y-4">
-                    <div className="flex items-center p-3 bg-blue-50 rounded-lg">
-                      <Camera className="w-5 h-5 text-blue-600 mr-3" />
-                      <span className="text-sm text-gray-700">Take a photo of the issue</span>
+                    <div className="flex items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <Camera className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3" />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">Take a photo of the issue</span>
                     </div>
-                    <div className="flex items-center p-3 bg-green-50 rounded-lg">
-                      <MapPin className="w-5 h-5 text-green-600 mr-3" />
-                      <span className="text-sm text-gray-700">Mark the location</span>
+                    <div className="flex items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                      <MapPin className="w-5 h-5 text-green-600 dark:text-green-400 mr-3" />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">Mark the location</span>
                     </div>
-                    <div className="flex items-center p-3 bg-purple-50 rounded-lg">
-                      <TrendingUp className="w-5 h-5 text-purple-600 mr-3" />
-                      <span className="text-sm text-gray-700">Track progress in real-time</span>
+                    <div className="flex items-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                      <TrendingUp className="w-5 h-5 text-purple-600 dark:text-purple-400 mr-3" />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">Track progress in real-time</span>
                     </div>
                   </div>
                 </div>
@@ -231,10 +231,10 @@ const Home = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-white/70 backdrop-blur-sm">
+      <section className="py-16 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-2">
+            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:-translate-y-2">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl">
                   <Users className="w-6 h-6 text-white" />
@@ -242,12 +242,12 @@ const Home = () => {
                 <TrendingUp className="w-5 h-5 text-green-500" />
               </div>
               <div className="space-y-1">
-                <p className="text-2xl font-bold text-gray-900">{stats.total.toLocaleString()}</p>
-                <p className="text-sm font-medium text-gray-600">Total Issues</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.total.toLocaleString()}</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Issues</p>
               </div>
             </div>
 
-            <div className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-2">
+            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:-translate-y-2">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl">
                   <AlertTriangle className="w-6 h-6 text-white" />
@@ -255,12 +255,12 @@ const Home = () => {
                 <Clock className="w-5 h-5 text-yellow-500" />
               </div>
               <div className="space-y-1">
-                <p className="text-2xl font-bold text-gray-900">{stats.pending.toLocaleString()}</p>
-                <p className="text-sm font-medium text-gray-600">Pending</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.pending.toLocaleString()}</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Pending</p>
               </div>
             </div>
 
-            <div className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-2">
+            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:-translate-y-2">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl">
                   <Clock className="w-6 h-6 text-white" />
@@ -268,12 +268,12 @@ const Home = () => {
                 <Zap className="w-5 h-5 text-purple-500" />
               </div>
               <div className="space-y-1">
-                <p className="text-2xl font-bold text-gray-900">{stats.inProgress.toLocaleString()}</p>
-                <p className="text-sm font-medium text-gray-600">In Progress</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.inProgress.toLocaleString()}</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">In Progress</p>
               </div>
             </div>
 
-            <div className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-2">
+            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:-translate-y-2">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl">
                   <CheckCircle className="w-6 h-6 text-white" />
