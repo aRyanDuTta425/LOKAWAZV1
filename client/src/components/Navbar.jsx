@@ -54,8 +54,8 @@ const Navbar = () => {
                     to="/dashboard"
                     className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActiveRoute('/dashboard') 
-                        ? 'text-blue-600 bg-blue-50' 
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                        ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' 
+                        : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     Dashboard
@@ -64,8 +64,8 @@ const Navbar = () => {
                     to="/new-issue"
                     className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActiveRoute('/new-issue') 
-                        ? 'text-blue-600 bg-blue-50' 
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                        ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' 
+                        : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     Report Issue
@@ -75,8 +75,8 @@ const Navbar = () => {
                       to="/admin"
                       className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                         isActiveRoute('/admin') 
-                          ? 'text-blue-600 bg-blue-50' 
-                          : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                          ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' 
+                          : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                       }`}
                     >
                       Admin
@@ -182,8 +182,8 @@ const Navbar = () => {
                     to="/dashboard"
                     className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
                       isActiveRoute('/dashboard') 
-                        ? 'text-blue-600 bg-blue-50' 
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                        ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' 
+                        : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                     onClick={() => setIsOpen(false)}
                   >
@@ -193,8 +193,8 @@ const Navbar = () => {
                     to="/new-issue"
                     className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
                       isActiveRoute('/new-issue') 
-                        ? 'text-blue-600 bg-blue-50' 
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                        ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' 
+                        : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                     onClick={() => setIsOpen(false)}
                   >
@@ -205,22 +205,22 @@ const Navbar = () => {
                       to="/admin"
                       className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
                         isActiveRoute('/admin') 
-                          ? 'text-blue-600 bg-blue-50' 
-                          : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                          ? 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' 
+                          : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                       }`}
                       onClick={() => setIsOpen(false)}
                     >
                       Admin
                     </Link>
                   )}
-                  <div className="border-t pt-4">
+                  <div className="border-t dark:border-gray-700 pt-4">
                     <div className="px-3 py-2">
-                      <p className="text-base font-medium text-gray-800">{user?.name}</p>
-                      <p className="text-sm text-gray-500">{user?.email}</p>
+                      <p className="text-base font-medium text-gray-800 dark:text-gray-200">{user?.name}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email}</p>
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                      className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
                       Sign out
                     </button>
@@ -230,14 +230,14 @@ const Navbar = () => {
                 <>
                   <Link
                     to="/login"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
                     Sign in
                   </Link>
                   <Link
                     to="/register"
-                    className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700"
+                    className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
                     Register

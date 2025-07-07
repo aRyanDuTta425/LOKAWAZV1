@@ -117,14 +117,14 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             {user?.role === 'ADMIN' ? 'Admin Dashboard' : 'My Dashboard'}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             {user?.role === 'ADMIN' 
               ? 'Manage all community issues' 
               : 'View and manage your reported issues'
@@ -134,32 +134,32 @@ const Dashboard = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="text-2xl font-bold text-blue-600 mb-2">{displayIssues.length}</div>
-            <div className="text-gray-600">Total Issues</div>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border dark:border-gray-700">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">{displayIssues.length}</div>
+            <div className="text-gray-600 dark:text-gray-400">Total Issues</div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="text-2xl font-bold text-yellow-600 mb-2">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border dark:border-gray-700">
+            <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mb-2">
               {displayIssues.filter(issue => issue.status === 'PENDING').length}
             </div>
-            <div className="text-gray-600">Pending</div>
+            <div className="text-gray-600 dark:text-gray-400">Pending</div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="text-2xl font-bold text-blue-600 mb-2">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border dark:border-gray-700">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">
               {displayIssues.filter(issue => issue.status === 'IN_PROGRESS').length}
             </div>
-            <div className="text-gray-600">In Progress</div>
+            <div className="text-gray-600 dark:text-gray-400">In Progress</div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="text-2xl font-bold text-green-600 mb-2">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border dark:border-gray-700">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">
               {displayIssues.filter(issue => issue.status === 'RESOLVED').length}
             </div>
-            <div className="text-gray-600">Resolved</div>
+            <div className="text-gray-600 dark:text-gray-400">Resolved</div>
           </div>
         </div>
 
         {/* Controls */}
-        <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm mb-8 border dark:border-gray-700">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             <div className="flex flex-col md:flex-row gap-4 items-center">
               {/* Search */}
@@ -222,7 +222,7 @@ const Dashboard = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayIssues.map((issue) => (
-              <div key={issue.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+              <div key={issue.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-200 border dark:border-gray-700">
                 {issue.image && (
                   <img
                     src={issue.image}
@@ -237,9 +237,9 @@ const Dashboard = () => {
                       {issue.status.replace('_', ' ')}
                     </span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{issue.title}</h3>
-                  <p className="text-gray-600 mb-3 line-clamp-2">{issue.description}</p>
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{issue.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">{issue.description}</p>
+                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
                     <span>{issue.location}</span>
                     <span>{formatDate(issue.createdAt)}</span>
                   </div>
@@ -248,14 +248,14 @@ const Dashboard = () => {
                   <div className="flex gap-2">
                     <Link
                       to={`/issue/${issue.id}`}
-                      className="flex-1 bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center"
+                      className="flex-1 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center"
                     >
                       View Details
                     </Link>
                     {(user?.role === 'ADMIN' || issue.userId === user?.id) && (
                       <button
                         onClick={() => handleDeleteIssue(issue.id)}
-                        className="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                        className="bg-red-600 text-white hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                       >
                         Delete
                       </button>

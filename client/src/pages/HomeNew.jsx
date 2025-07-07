@@ -281,7 +281,7 @@ const Home = () => {
                 <ThumbsUp className="w-5 h-5 text-green-500" />
               </div>
               <div className="space-y-1">
-                <p className="text-2xl font-bold text-gray-900">{stats.resolved.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-gray-900  dark:text-white">{stats.resolved.toLocaleString()}</p>
                 <p className="text-sm font-medium text-gray-600">Resolved</p>
               </div>
             </div>
@@ -290,11 +290,11 @@ const Home = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">How It Works</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Simple steps to report issues and create positive change in your community
             </p>
           </div>
@@ -305,13 +305,13 @@ const Home = () => {
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mb-6 group-hover:scale-110 transition-transform duration-300">
                   <Camera className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">1. Report Issue</h3>
-                <p className="text-gray-600 leading-relaxed">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">1. Report Issue</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                   Take a photo of the civic issue, add a description, and mark the location on the map. 
                   Your report helps authorities understand the problem.
                 </p>
               </div>
-              <div className="hidden md:block absolute top-10 -right-4 text-gray-300">
+              <div className="hidden md:block absolute top-10 -right-4 text-gray-300 dark:text-gray-600">
                 <ArrowRight className="w-8 h-8" />
               </div>
             </div>
@@ -321,13 +321,13 @@ const Home = () => {
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-6 group-hover:scale-110 transition-transform duration-300">
                   <Eye className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">2. Track Progress</h3>
-                <p className="text-gray-600 leading-relaxed">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">2. Track Progress</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                   Follow your issue through different stages - from reported to under review, 
                   in progress, and finally resolved with real-time updates.
                 </p>
               </div>
-              <div className="hidden md:block absolute top-10 -right-4 text-gray-300">
+              <div className="hidden md:block absolute top-10 -right-4 text-gray-300 dark:text-gray-600">
                 <ArrowRight className="w-8 h-8" />
               </div>
             </div>
@@ -337,8 +337,8 @@ const Home = () => {
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mb-6 group-hover:scale-110 transition-transform duration-300">
                   <CheckCircle className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">3. See Results</h3>
-                <p className="text-gray-600 leading-relaxed">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">3. See Results</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                   Watch as your reported issues get resolved and your community improves. 
                   Every resolved issue makes a difference for everyone.
                 </p>
@@ -349,12 +349,12 @@ const Home = () => {
       </section>
 
       {/* Recent Issues Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Recent Issues</h2>
-              <p className="text-xl text-gray-600">
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Recent Issues</h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300">
                 See what's happening in your community and how issues are being resolved
               </p>
             </div>
@@ -386,9 +386,9 @@ const Home = () => {
                 <Link 
                   key={issue.id} 
                   to={`/issue/${issue.id}`}
-                  className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden hover:-translate-y-2"
+                  className="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden hover:-translate-y-2"
                 >
-                  <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+                  <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 relative overflow-hidden">
                     {issue.imageUrl ? (
                       <img 
                         src={issue.imageUrl} 
@@ -397,7 +397,7 @@ const Home = () => {
                       />
                     ) : (
                       <div className="flex items-center justify-center h-full">
-                        <Camera className="w-12 h-12 text-gray-400" />
+                        <Camera className="w-12 h-12 text-gray-400 dark:text-gray-500" />
                       </div>
                     )}
                     <div className="absolute top-4 right-4">
@@ -407,18 +407,18 @@ const Home = () => {
                   
                   <div className="p-6">
                     <div className="space-y-3">
-                      <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                         {issue.title}
                       </h3>
-                      <p className="text-sm text-gray-600 line-clamp-2">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
                         {issue.description}
                       </p>
                       <div className="flex items-center justify-between pt-2">
-                        <div className="flex items-center text-xs text-gray-500">
+                        <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
                           <Calendar className="w-3 h-3 mr-1" />
                           {formatDate(issue.createdAt)}
                         </div>
-                        <div className="flex items-center text-xs text-gray-500">
+                        <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
                           <MapPin className="w-3 h-3 mr-1" />
                           View Location
                         </div>

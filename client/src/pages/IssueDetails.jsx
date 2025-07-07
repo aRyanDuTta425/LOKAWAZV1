@@ -154,22 +154,22 @@ const IssueDetails = () => {
 
   const getStatusColor = (status) => {
     const colors = {
-      'REPORTED': 'bg-blue-100 text-blue-800',
-      'UNDER_REVIEW': 'bg-yellow-100 text-yellow-800',
-      'IN_PROGRESS': 'bg-purple-100 text-purple-800',
-      'RESOLVED': 'bg-green-100 text-green-800',
-      'CLOSED': 'bg-gray-100 text-gray-800'
+      'REPORTED': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+      'UNDER_REVIEW': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+      'IN_PROGRESS': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+      'RESOLVED': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      'CLOSED': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
   };
 
   const getPriorityColor = (priority) => {
     const colors = {
-      'LOW': 'text-green-600',
-      'MEDIUM': 'text-orange-600',
-      'HIGH': 'text-red-600'
+      'LOW': 'text-green-600 dark:text-green-400',
+      'MEDIUM': 'text-orange-600 dark:text-orange-400',
+      'HIGH': 'text-red-600 dark:text-red-400'
     };
-    return colors[priority] || 'text-gray-600';
+    return colors[priority] || 'text-gray-600 dark:text-gray-400';
   };
 
   const getStatusIcon = (status) => {
@@ -226,13 +226,13 @@ const IssueDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors duration-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="flex items-center text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 mb-4 transition-colors"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back
@@ -240,8 +240,8 @@ const IssueDetails = () => {
           
           <div className="flex justify-between items-start">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{issue.title}</h1>
-              <div className="flex items-center space-x-4 text-sm text-gray-500">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{issue.title}</h1>
+              <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
                 <span className="flex items-center">
                   <User className="w-4 h-4 mr-1" />
                   {issue.user?.name || 'Anonymous'}
@@ -251,7 +251,7 @@ const IssueDetails = () => {
                   {new Date(issue.createdAt).toLocaleDateString()}
                 </span>
                 <span className="flex items-center">
-                  <Heart className={`w-4 h-4 mr-1 ${isLiked ? 'text-red-500 fill-current' : 'text-gray-400'}`} />
+                  <Heart className={`w-4 h-4 mr-1 ${isLiked ? 'text-red-500 fill-current' : 'text-gray-400 dark:text-gray-500'}`} />
                   {likesCount} {likesCount === 1 ? 'like' : 'likes'}
                 </span>
               </div>
@@ -305,7 +305,7 @@ const IssueDetails = () => {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Issue Details Card */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-colors duration-200">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-4">
                   <span className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(issue.status)}`}>
@@ -317,7 +317,7 @@ const IssueDetails = () => {
                     {issue.priority || 'Unknown'} Priority
                   </span>
                 </div>
-                <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full transition-colors duration-200">
                   {issue.category}
                 </span>
               </div>
