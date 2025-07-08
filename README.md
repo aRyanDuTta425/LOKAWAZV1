@@ -73,7 +73,31 @@ To create a transparent, efficient, and user-friendly platform that empowers cit
 
 ---
 
-## 🛠️ Tech Stack
+## � Screenshots
+
+<div align="center">
+
+### 🏠 **Home Page**
+![Home Page](./public/HOME.png)
+*Clean, intuitive interface with interactive map and issue overview*
+
+### 📋 **User Dashboard & AI Chatbot**
+![User Dashboard](./public/USER%20DASHBOARD%20AND%20CHATBOT.png)
+*Personalized dashboard with issue tracking and AI-powered assistance*
+
+### 📝 **Issue Reporting**
+![Report Issue](./public/REPORT%20ISSUE.png)
+*Streamlined issue reporting with location selection and image upload*
+
+### 👨‍💼 **Admin Dashboard**
+![Admin Dashboard](./public/ADMIN%20DASHBOARD.png)
+*Comprehensive admin panel with analytics and issue management*
+
+</div>
+
+---
+
+## �🛠️ Tech Stack
 
 <div align="center">
 
