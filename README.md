@@ -91,6 +91,7 @@ To create a transparent, efficient, and user-friendly platform that empowers cit
 
 ### 👨‍💼 **Admin Dashboard**
 ![Admin Dashboard](./public/ADMIN%20DASHBOARD.png)
+
 *Comprehensive admin panel with analytics and issue management*
 
 </div>
