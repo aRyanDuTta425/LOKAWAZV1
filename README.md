@@ -418,8 +418,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 **Built with ❤️ by [Aryan Dutta](https://github.com/aRyanDuTta425)**
 
 [![GitHub](https://img.shields.io/badge/GitHub-aRyanDuTta425-181717?style=for-the-badge&logo=github)](https://github.com/aRyanDuTta425)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/your-profile)
-[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-FF5722?style=for-the-badge&logo=web)](https://your-portfolio.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin)](www.linkedin.com/in/aryan-dutta-ad425)
+ 
 
 ---
 
