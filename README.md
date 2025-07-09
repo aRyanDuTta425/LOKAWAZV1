@@ -4,7 +4,7 @@
   
   ![LOKAWAZ Banner](https://img.shields.io/badge/LOKAWAZ-Community%20Issue%20Tracker-blue?style=for-the-badge&logo=city&logoColor=white)
   
-  [![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Vercel-black?style=for-the-badge)](https://lokawazweb-ab4hifzha-aryan-duttas-projects.vercel.app)
+  [![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Vercel-black?style=for-the-badge)](https://lokawazweb.vercel.app/)
   [![Backend API](https://img.shields.io/badge/🔗%20API-Render-green?style=for-the-badge)](https://lokawazv1.onrender.com/api)
   [![MIT License](https://img.shields.io/badge/📄%20License-MIT-yellow?style=for-the-badge)](LICENSE)
   
